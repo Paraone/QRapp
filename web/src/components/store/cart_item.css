@@ -1,0 +1,41 @@
+.cartItem{
+  margin: 0;
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+  background: rgba(210, 220, 230, .35);
+  padding: 15px 5px 8px 20px;
+  color: black;
+}
+
+.cartItem .row div{
+  display: inline-block;
+}
+
+.cartItem .img{
+  text-align: center;
+  display: inline-block;
+  background: white;
+  line-height: 5;
+  width: 100px;
+  max-height: 80px;
+}
+
+.cartItem .img img{
+  max-width: 90%;
+  vertical-align: middle;
+}
+
+.cartItem .btn, .cartItem .qty{
+  /*margin-top: 20px;*/
+}
+
+.cartItem .btn{
+}
+
+.cartItem .del{
+  display: inline;
+  float: right;
+  color: white;
+}
+

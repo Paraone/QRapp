@@ -1,0 +1,23 @@
+.App-header {
+  border-bottom: 5px solid rgba(0, 225, 160, 1);
+  background: rgba(255,255,255, 1);
+  color: white;
+}
+
+.container{
+  width: 95%;
+}
+
+.App-header h2 {
+  margin: 0;
+  margin-top: 30px;
+  padding: 3px 40px;
+  background: rgba(0, 225, 160, 1);
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+}
+.App {
+  margin: 0;
+  padding: 0;
+}

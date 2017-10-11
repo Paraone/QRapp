@@ -1,0 +1,66 @@
+.fruit{
+  width: 95%;
+}
+
+
+.store {
+  padding: 0;
+  margin: 0;
+}
+
+.fruit .store ul{
+  padding: 0;
+  margin: 0;
+}
+
+.fruit .store ul li {
+  float: left;
+}
+.cart {
+  background: rgba(0, 225, 160, 1);
+  padding: 0;
+  min-height: 100vh;
+  text-align: center;
+  color: white;
+}
+
+.cart ul{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.cart ul li{
+}
+
+.cart .total{
+  margin-left: 20px;
+  padding-right: 15px;
+  border-top: solid 2px white;
+  text-align: right;
+  padding-top: 10px;
+}
+
+
+.fruit li{
+  display: inline-block;
+}
+
+
+.cart .empty{
+  font-size: .8em;
+  cursor: pointer;
+}
+
+.cart .cartTotal{
+  font-weight: bold;
+}
+.cart .total .btn{
+  background: rgba(255, 255, 255, .7);
+  border: none;
+  border-radius: 6px;
+  margin: 10px 0;
+  color: black;
+  font-weight: bold;
+
+}
