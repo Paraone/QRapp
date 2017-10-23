@@ -2,8 +2,8 @@ import {combineReducers} from 'redux';
 import {routerReducer} from 'react-router-redux';
 
 // reducser imports here
-import fruit from './fruit';
+import home from './home';
 
-const rootReducer = combineReducers({fruit, routing: routerReducer});
+const rootReducer = combineReducers({home, routing: routerReducer});
 
 export default rootReducer;

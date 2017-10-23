@@ -1,5 +1,5 @@
 .App-header {
-  border-bottom: 5px solid rgba(0, 225, 160, 1);
+  border-bottom: 5px solid rgba(0, 0, 0, 1);
   background: rgba(255,255,255, 1);
   color: white;
 }
@@ -12,7 +12,7 @@
   margin: 0;
   margin-top: 30px;
   padding: 3px 40px;
-  background: rgba(0, 225, 160, 1);
+  background: rgba(0, 0, 0, 1);
   font-weight: bold;
   text-align: center;
   display: inline-block;

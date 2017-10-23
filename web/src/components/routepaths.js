@@ -5,7 +5,7 @@ import store, {history} from '../store';
 
 //components
 import Connector from './connector';
-import fruit from './pages/fruit';
+import home from './pages/home';
 
 class RoutePaths extends Component{
   render(){
@@ -13,7 +13,7 @@ class RoutePaths extends Component{
       <Provider store={store}>
         <Router history={history}>
           <Route path="/" component={Connector}>
-            <IndexRoute component={fruit}></IndexRoute>
+            <IndexRoute component={home}></IndexRoute>
             {/*
               <Route path="/users" component={AllUsers}></Route>
             */}

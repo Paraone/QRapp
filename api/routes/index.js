@@ -8,7 +8,7 @@ const db = pgp(process.env.DATABASE_URL);
 const bcrypt = require('bcrypt');
 
 routes.get('/', (req, res) => {
-  res.status(200).json({ message: 'Connected to muscle!' });
+  res.status(200).json({ message: 'SUCCESS' });
 });
 
 routes.post('/login', (req, res)=>{
@@ -16,7 +16,7 @@ routes.post('/login', (req, res)=>{
   const data = req.body;
   //get user from database
   db.one(
-    'SELECT * FROM users WHERE email=$1', 
+    'SELECT * FROM users WHERE email=$1',
     [data.email]
   ).catch((err)=>{//catch error if any
     console.log(err);

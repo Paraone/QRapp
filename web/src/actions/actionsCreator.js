@@ -1,37 +1,28 @@
-export function confirmBuy(cart){
-  return{
-    type: 'CONFIRM_BUY',
-    cart
+import axios from 'axios';
 
+export function uploadSuccess(data){
+  return{
+    type: 'UPLOAD_DOCUMENT_SUCCESS',
+    data
   }
 }
 
-export function emptyCart(){
+export function uploadFail(error){
   return{
-    type: 'EMPTY_CART',
-    value: true
+    type: 'UPLAOD_DOCUMENT_FAIL',
+    error
   }
 }
 
-export function deleteFromCart(itemName){
-  return{
-    type: 'DELETE_FROM_CART',
-    itemName
-  }
-}
+export function uploadRequest({file, name}){
+  let data = new FormData();
 
-export function setQty(n, itemName){
-  return{
-    type: 'SET_QTY',
-    n,
-    itemName
-  }
-}
+  data.append('file', document);
+  data.append('name', name);
 
-export function addToCart(item){
-
-  return{
-    type: 'ADD_TO_CART',
-    item
+  return (dispatch) => {
+    axios.post('/files', data)
+      .then(response => dispatch(uploadSuccess(response)))
+      .catch(error => dispatch(uploadFail(error)));
   }
 }

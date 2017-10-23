@@ -5,7 +5,8 @@ import App from './App';
 
 function mapStateToProps(state){
 	return{
-    fruit: state.fruit
+    fruit: state.fruit,
+    home: state.home
   }
 }
 
