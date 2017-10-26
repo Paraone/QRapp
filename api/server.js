@@ -4,15 +4,7 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const multer = require('multer');
-const storage = multer.diskStorage({
-  destination: (req, file, cb)=>{
-    cb(null, '/tmp/uploads');
-  },
-  filename: (req, file, cb) =>{
-    cb(null, file.fieldname + '_'+ Date.now());
-  }
-})
-const upload = multer({storage});
+const upload = multer({dest: 'uploads/'});
 
 // Set up the express app
 const app = express();
@@ -28,8 +20,8 @@ const corsOptions = {
 app.use(logger('dev'));
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // app.use(function(req, res, next){
 //   res.header("Access-Control-Allow-Origin", '*');
@@ -51,7 +43,8 @@ app.get('/', (req, res)=>{
 });
 
 app.use('/upload', cors());
-app.post('/upload', upload.single('file'), (req, res, next)=>{
+app.post('/upload', upload.single('file'), (req, res)=>{
+  console.log('req', req)
   if(!req.file) return res.json({message: 'No file uploaded'});
   let file = req.file;
 
