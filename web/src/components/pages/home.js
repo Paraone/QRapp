@@ -23,13 +23,14 @@ class Home extends Component{
 
     let data = new FormData();
     data.append('img', file.files[0]);
-    data.append('name', file);
+    data.append('name', file.name);
 
 
-    axios.post('http://localhost:3030/upload').catch((err)=>{
+    axios.post('http://localhost:3030/upload', data).catch((err)=>{
       console.log(err);
     }).then((res)=>{
-      this.setState({response: res.message});
+      console.log('res', res)
+      this.setState({response: res.data.message});
     })
   }
 
@@ -46,7 +47,7 @@ class Home extends Component{
     return(
       <div className="container home">
         <form ref={(input) => this.form = input} onSubmit={(e) => this.submit(e)} className="form">
-          <input ref={(input) => this.file = input} type="file" name="file" id="file"/>
+          <input ref={(input) => this.file = input} type="file" name="upfile" id="file"/>
           <input type="submit"/>
         </form>
         <div onClick={() => this.api()} className="btn btn-primary">{this.state.response}</div>

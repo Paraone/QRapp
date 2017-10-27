@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const multer = require('multer');
-const upload = multer({dest: 'uploads/'});
+const upload = multer({dest: './uploads/'});
+const fs = require('fs');
 
 // Set up the express app
 const app = express();
@@ -43,13 +44,14 @@ app.get('/', (req, res)=>{
 });
 
 app.use('/upload', cors());
-app.post('/upload', upload.single('file'), (req, res)=>{
-  console.log('req', req)
-  if(!req.file) return res.json({message: 'No file uploaded'});
-  let file = req.file;
+app.post('/upload', upload.single('picfile'), (req, res)=>{
+  console.log('req.body', req.body);
+  console.log('req.files', req.files);
+  if(!req.files) return res.json({message: 'No file uploaded'});
+  let uploadFile = req.files;
 
-  file.mv('/files/file.jpg', (err)=>{
-    if(err) return res.json({message: err});
-    res.json({message: 'uploaded'})
-  })
+  fs.appendFile(`./files/${uploadFile.img.name}`, uploadFile.img.data, (err, data)=>{
+    if(err) console.log(err);
+    res.json({message: 'Uploaded!'})
+  });
 });
