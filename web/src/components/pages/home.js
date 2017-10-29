@@ -19,26 +19,16 @@ class Home extends Component{
   submit(e){
     e.preventDefault();
 
-    let {form, file} = this;
+    let {file} = this;
 
-    let data = new FormData();
-    data.append('img', file.files[0]);
-    data.append('name', file.name);
+    this.props.uploadFile(file);
 
-
-    axios.post('http://localhost:3030/upload', data).catch((err)=>{
-      console.log(err);
-    }).then((res)=>{
-      console.log('res', res)
-      this.setState({response: res.data.message});
-    })
   }
 
   api(){
     axios.get('http://localhost:3030/').catch((err)=>{
       console.log(err);
     }).then((res) =>{
-      console.log(res);
       this.setState({response: res.data.message});
     });
   }

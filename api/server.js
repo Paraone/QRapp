@@ -21,16 +21,8 @@ const corsOptions = {
 app.use(logger('dev'));
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-
-// app.use(function(req, res, next){
-//   res.header("Access-Control-Allow-Origin", '*');
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.header("Access-Control-Allow-Methods", 'POST,GET,DELETE,PUT');
-//   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
-//   next();
-// })
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(fileUpload());
 
@@ -38,15 +30,15 @@ app.listen(3030, () => {
   console.log('App listening on port 3030');
 });
 
-app.use('/', cors());
+app.use('*', cors());
 app.get('/', (req, res)=>{
+
   res.json({message: 'Connected'});
+
 });
 
-app.use('/upload', cors());
 app.post('/upload', upload.single('picfile'), (req, res)=>{
-  console.log('req.body', req.body);
-  console.log('req.files', req.files);
+
   if(!req.files) return res.json({message: 'No file uploaded'});
   let uploadFile = req.files;
 

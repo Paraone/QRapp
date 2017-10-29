@@ -1,8 +1,16 @@
 function home(state = {}, action){
   let newstate = Object.assign({}, state);
+  console.log('home reducer "action"', action);
   switch(action.type){
-    case 'ADD_TO_CART':
+    case 'UPLOAD_ATTEMPT':
       return newstate;
+
+    case 'UPLOAD_SUCCESS':
+      return newstate;
+
+    case 'UPLAOD_FAIL':
+      return newstate;
+
     default:
       return state;
   }
