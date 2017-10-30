@@ -1,18 +1,24 @@
 import axios from 'axios';
 
-export function attemptUpload(){
+const apiCall = axios.create({
+  baseURL: 'http://localhost:3030'
+})
+
+
+// upload file /////////////////////////////////////////////////////
+function attemptUpload(){
   return {
     type: 'UPLOAD_ATTEMPT'
   }
 }
 
-export function uploadSuccess(){
+function uploadSuccess(res){
   return {
     type: 'UPLOAD_SUCCESS'
   }
 }
 
-export function uploadFail(){
+function uploadFail(err){
   return {
     type: 'UPLOAD_FAIL'
   }
@@ -24,15 +30,54 @@ export function uploadFile(file){
   data.append('img', file.files[0]);
   data.append('name', file.name);
 
-
   return (dispatch) => {
     dispatch(attemptUpload());
-    return axios.post('http://localhost:3030/upload', data).then((res)=>{
-      console.log('res', res);
-      dispatch(uploadSuccess());
+    return apiCall.post('/upload', data).then((res)=>{
+      dispatch(uploadSuccess(res));
     }).catch((err)=>{
-      if(err) console.log(err);
-      dispatch(uploadFail());
+      dispatch(uploadFail(err));
+    })
+  }
+}
+
+export function setForm(form){
+  return{
+    type: 'SET_FORM',
+    form
+  }
+}
+
+
+// create user accounts ///////////////////////////////////////////
+function attemptCreateUser(){
+  return {
+    type: 'CREATE_USER_ATTEMPT'
+  }
+}
+
+function createUserSuccess(user){
+  console.log('user', user);
+  return {
+    type: 'CREATE_USER_SUCCESS',
+    user
+  }
+}
+
+function createUserFail(err){
+  console.log('err', err);
+  return {
+    type: 'CREATE_USER_FAIL',
+    err
+  }
+}
+
+export function createUser(user){
+  return (dispatch) =>{
+    dispatch(attemptCreateUser());
+    return apiCall.post('/users', user).then((res)=>{
+      dispatch(createUserSuccess(res));
+    }).catch((err)=>{
+      dispatch(createUserFail(err));
     })
   }
 }

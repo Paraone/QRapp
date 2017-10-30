@@ -5,7 +5,9 @@ import thunk from 'redux-thunk';
 import rootReducer from './reducers/index';
 
 const defaultState = {
-  home: {}
+  home: {
+    form: 'login'
+  }
 };
 
 const store = createStore(rootReducer, defaultState, applyMiddleware(thunk));

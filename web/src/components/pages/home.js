@@ -1,19 +1,28 @@
 import React, {Component} from 'react';
-import axios from 'axios';
+import AlertContainer from 'react-alert';
 
 import Upload from '../forms/upload';
+import Login from '../forms/login';
+import Register from '../forms/register';
 
 class Home extends Component{
 
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
 
-    this.state = {
-      response: 'API'
-    }
-
-    this.api = this.api.bind(this);
     this.submit = this.submit.bind(this);
+    this.setForm = this.setForm.bind(this);
+    this.alertOptions = {
+      offset: 14,
+      position: 'top center',
+      theme: 'dark',
+      time: 2000,
+      transition: 'scale'
+    };
+  }
+
+  setForm(form){
+    this.props.setForm(form);
   }
 
   submit(e){
@@ -25,22 +34,33 @@ class Home extends Component{
 
   }
 
-  api(){
-    axios.get('http://localhost:3030/').catch((err)=>{
-      console.log(err);
-    }).then((res) =>{
-      this.setState({response: res.data.message});
-    });
-  }
+  showAlert = ()=>{
+    this.alert.success('alert success!', {
+      onClose: () =>{this.alert.info('alert info!',{
+        onClose: () =>{this.alert.error('alert error!')}
+      })}
+    })
+  };
 
   render(){
+    const {form} = this.props.home;
+
     return(
       <div className="container home">
-        <form ref={(input) => this.form = input} onSubmit={(e) => this.submit(e)} className="form">
-          <input ref={(input) => this.file = input} type="file" name="upfile" id="file"/>
-          <input type="submit"/>
-        </form>
-        <div onClick={() => this.api()} className="btn btn-primary">{this.state.response}</div>
+        <AlertContainer ref={(s)=> this.alert = s} {...this.alertOptions}></AlertContainer>
+        {form === 'login' &&
+          <div>
+            <Login {...this.props} />
+            Not a member? <span className="btn" onClick={() => {this.setForm('register')}}>Create Account</span>
+          </div>
+
+        }
+        {form === 'register' &&
+          <div>
+            <Register {...this.props} />
+            Already a member? <span className="btn" onClick={() => {this.setForm('login')}}>Log In</span>
+          </div>
+        }
       </div>
     );
   }

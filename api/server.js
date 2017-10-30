@@ -1,15 +1,26 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const multer = require('multer');
-const upload = multer({dest: './uploads/'});
 const fs = require('fs');
+const pgp = require('pg-promise')();
+const bcrypt = require('bcrypt');
+const port = process.env.PORT || 3030;
+
+// set up bcrypt
+const salt = bcrypt.genSalt(10);
 
 // Set up the express app
 const app = express();
 
+// set up multer
+const upload = multer({dest: './uploads/'});
+
+// set up pgp
+const db = pgp(process.env.DATABASE || 'postgres://paraone@localhost:5432/qr');
+
+// set up cors
 const corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true,
@@ -24,19 +35,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(fileUpload());
-
-app.listen(3030, () => {
-  console.log('App listening on port 3030');
+app.listen(port, () => {
+  console.log(`App listening on port ${port}`);
 });
 
 app.use('*', cors());
+
+// Connection test
 app.get('/', (req, res)=>{
-
   res.json({message: 'Connected'});
-
 });
 
+// basic upload
 app.post('/upload', upload.single('picfile'), (req, res)=>{
 
   if(!req.files) return res.json({message: 'No file uploaded'});
@@ -46,4 +56,52 @@ app.post('/upload', upload.single('picfile'), (req, res)=>{
     if(err) console.log(err);
     res.json({message: 'Uploaded!'})
   });
+});
+
+// create user
+app.post('/users', (req, res)=>{
+  console.log('req.body', req.body);
+  const {password, username, email} = req.body;
+
+  bcrypt.hash(password, 10, (err, hash)=>{
+    db.one(
+      'INSERT INTO users (id, username, email, password_digest) VALUES (DEFAULT, $1, $2, $3) RETURNING *',
+      [username, email, hash]
+    ).catch((err)=>{
+      console.log(err);
+      res.json(err);
+    }).then((user)=>{
+      console.log(user);
+      //create user session here
+      res.json(user);
+    });
+  });
+});
+
+app.get('/login', (req, res)=>{
+
+});
+
+app.get('/logout', (req, res)=>{
+
+});
+
+// get all users
+app.get('/users', (req, res)=>{
+
+});
+
+// get single user
+app.get('/users/:id', (req, res)=>{
+
+});
+
+// update user
+app.put('/users/:id', (req, res)=>{
+
+});
+
+// delete users
+app.delete('/users/:id', (req, res)=>{
+
 });
