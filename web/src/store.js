@@ -7,7 +7,8 @@ import rootReducer from './reducers/index';
 const defaultState = {
   home: {
     form: 'login'
-  }
+  },
+  user: {}
 };
 
 const store = createStore(rootReducer, defaultState, applyMiddleware(thunk));

@@ -81,3 +81,68 @@ export function createUser(user){
     })
   }
 }
+
+// login ////////////////////////////////////////////////////////////
+function attemptLogin(){
+  return{type: 'LOGIN_ATTEMPT'}
+}
+
+function loginSuccess(res){
+  const {data:{token}} = res;
+  console.log(token);
+  return{
+    type: 'LOGIN_SUCCESS',
+    token
+  }
+}
+
+function loginFail(err) {
+  return {
+    type: 'LOGIN_FAIL',
+    err
+  }
+}
+
+export function login(user){
+  return (dispatch) =>{
+    dispatch(attemptLogin());
+    return apiCall.post('/login', user).then((res)=>{
+      dispatch(loginSuccess(res));
+    }).catch((err)=>{
+      dispatch(loginFail(err));
+    })
+  }
+}
+
+// validate /////////////////////////////////////////////////////////
+function attemptValidate(){
+  return {type: 'VALIDATE_ATTEMPT'}
+}
+
+function validateSuccess(res){
+  console.log(res);
+  return{
+    type: 'VALIDATE_SUCCESS',
+    res
+  }
+}
+
+function validateFail(err){
+  return {
+    type: 'VALIDATE_FAIL',
+    err
+  }
+}
+
+export function validate(payload){
+  console.log('action->validate->token:', payload);
+  return (dispatch) =>{
+    console.log('middleware', payload);
+    dispatch(attemptValidate());
+    return apiCall.post('/validate', payload).then((res) =>{
+      dispatch(validateSuccess(res));
+    }).catch((err)=>{
+      dispatch(validateFail(err));
+    })
+  }
+}

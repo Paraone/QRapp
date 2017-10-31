@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import AlertContainer from 'react-alert';
 
-import Upload from '../forms/upload';
 import Login from '../forms/login';
 import Register from '../forms/register';
 
@@ -11,7 +10,9 @@ class Home extends Component{
     super(props);
 
     this.submit = this.submit.bind(this);
+    this.validate = this.validate.bind(this);
     this.setForm = this.setForm.bind(this);
+
     this.alertOptions = {
       offset: 14,
       position: 'top center',
@@ -42,8 +43,15 @@ class Home extends Component{
     })
   };
 
+  validate(mytoken){
+    console.log('validate->token:', mytoken);
+    this.props.validate(mytoken);
+  };
+
   render(){
     const {form} = this.props.home;
+    const {token} = this.props.user;
+    console.log('render->token:', token)
 
     return(
       <div className="container home">
@@ -61,6 +69,7 @@ class Home extends Component{
             Already a member? <span className="btn" onClick={() => {this.setForm('login')}}>Log In</span>
           </div>
         }
+        <div className='btn' onClick={()=> {this.validate({token})}} >Validate</div>
       </div>
     );
   }

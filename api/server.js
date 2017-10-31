@@ -6,6 +6,7 @@ const multer = require('multer');
 const fs = require('fs');
 const pgp = require('pg-promise')();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 3030;
 
 // set up bcrypt
@@ -78,8 +79,26 @@ app.post('/users', (req, res)=>{
   });
 });
 
-app.get('/login', (req, res)=>{
+app.post('/login', (req, res)=>{
+  console.log('req.body', req.body);
+  const {username, password} = req.body;
+  jwt.sign({username}, 'secret', {expiresIn: (60 * 2)}, (err, token)=>{
+    if(err) console.log('err', err);
+    res.json({token});
+  })
+});
 
+app.post('/validate', (req, res)=>{
+  console.log('req.body', req.body)
+  const {token} = req.body;
+  try{
+    jwt.verify(token, 'secret', (err, decoded)=>{
+      if(err) console.log('err', err);
+      res.json({decoded});
+    });
+  }catch(e){
+    console.log(e);
+  }
 });
 
 app.get('/logout', (req, res)=>{

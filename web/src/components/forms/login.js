@@ -1,21 +1,25 @@
 import React, {Component} from 'react';
 
 class Login extends Component{
+
+  submit(e){
+    e.preventDefault();
+    const {username: {value: username},
+            password: {value: password}} = this;
+    this.props.login({username, password});
+  }
+
   render(){
     return(
-      <form className="form">
+      <form onSubmit={(e)=> this.submit(e)} className="form">
         <legend>Log In</legend>
         <fieldset>
           <label htmlFor="username">Username:</label>
-          <input type="text" name="username" placeholder="username"/>
-        </fieldset>
-        <fieldset>
-          <label htmlFor="email">E-mail:</label>
-          <input type="email" name="email" placeholder="email"/>
+          <input ref={(input) => this.username = input} type="text" name="username" placeholder="username"/>
         </fieldset>
         <fieldset>
           <label htmlFor="password">Password:</label>
-          <input type="password" name="password" placeholder="password"/>
+          <input ref={(input) => this.password = input} type="password" name="password" placeholder="password"/>
         </fieldset>
         <fieldset>
           <input type="submit" value="Log In"/>
