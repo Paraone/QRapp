@@ -9,6 +9,15 @@ var delete_cookie = (name)=>{
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
+// HOME FUNCTIONS //////////////////////////////////////////////////
+
+export function setForm(form){
+  return{
+    type: 'SET_FORM',
+    form
+  };
+}
+
 
 // UPLOAD FUNCTIONS /////////////////////////////////////////////////////
 function attemptUpload(){
@@ -45,15 +54,6 @@ export function uploadFile(file){
   }
 }
 
-// HOME FUNCTIONS //////////////////////////////////////////////////
-
-export function setForm(form){
-  return{
-    type: 'SET_FORM',
-    form
-  };
-}
-
 // USER FUNCTIONS /////////////////////////////////////////////////
 // create user accounts ///////////////////////////////////////////
 function attemptCreateUser(){
@@ -63,7 +63,6 @@ function attemptCreateUser(){
 }
 
 function createUserSuccess(user){
-  console.log('user', user);
   setTimeout(()=>{
     browserHistory.push(`/users/${user.id}`);
   });
@@ -91,6 +90,7 @@ export function createUser(user){
     dispatch(attemptCreateUser());
     return apiCall.post('/users', user).then((res)=>{
       dispatch(createUserSuccess(res.data));
+      dispatch(setForm('login'));
     }).catch((err)=>{
       dispatch(createUserFail(err));
     });
@@ -130,12 +130,47 @@ export function login(user){
   return (dispatch) =>{
     dispatch(attemptLogin());
     return apiCall.post('/login', user).then((res)=>{
-      console.log('res.data: ', res.data);
       if(res.data.err)
         dispatch(loginFail(res.data.err));
       else dispatch(loginSuccess(res.data));
     }).catch((err)=>{
       dispatch(loginFail(err));
+    })
+  }
+}
+
+// logout /////////////////////////////////////////////////////////
+function attemptLogout(){
+  return{type: 'LOGOUT_ATTEMPT'};
+}
+
+function logoutSuccess(payload){
+  delete_cookie('token');
+  setTimeout(()=>{
+    browserHistory.push('/');
+  });
+  return{
+    type: 'LOGOUT_SUCCESS',
+    payload
+  };
+}
+
+function logoutFail(err) {
+  return {
+    type: 'LOGOUT_FAIL',
+    err
+  };
+}
+
+export function logout(id){
+  return (dispatch) =>{
+    dispatch(attemptLogout());
+    return apiCall.post('/logout', {id}).then((res)=>{
+      if(res.data.err)
+        dispatch(logoutFail(res.data.err));
+      else dispatch(logoutSuccess(res.data));
+    }).catch((err)=>{
+      dispatch(logoutFail(err));
     })
   }
 }

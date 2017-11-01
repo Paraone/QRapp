@@ -1,5 +1,6 @@
 function user(state = {}, action){
   let newstate = Object.assign({}, state);
+  console.log('reducers::user action:', action);
   switch(action.type){
 
     case 'CREATE_USER_ATTEMPT':
@@ -20,6 +21,16 @@ function user(state = {}, action){
       return newstate;
 
     case 'LOGIN_FAIL':
+      return newstate;
+
+    case 'LOGOUT_ATTEMPT':
+      return newstate;
+
+    case 'LOGOUT_SUCCESS':
+      newstate = {};
+      return newstate;
+
+    case 'LOGOUT_FAIL':
       return newstate;
 
     case 'VALIDATE_ATTEMPT':

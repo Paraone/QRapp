@@ -85,7 +85,7 @@ app.post('/users', (req, res)=>{
 app.post('/login', (req, res)=>{
   const {username: usernm, password} = req.body;
 
-  db.one('SELECT * FROM users WHERE username=$1', [usernm]).catch((err)=>{
+  db.one('SELECT * FROM users WHERE username=$1 OR email=$1', [usernm]).catch((err)=>{
     if(err) {
       console.log('err', err);
       res.json({err: 'Username or password is incorrect.'});
@@ -106,7 +106,6 @@ app.post('/login', (req, res)=>{
 });
 
 app.post('/validate', (req, res)=>{
-  console.log('body', req.body)
   const {token} = req.body;
   jwt.verify(token, 'secret', (err, decoded)=>{
     if(err) res.json({err});
@@ -115,7 +114,8 @@ app.post('/validate', (req, res)=>{
 });
 
 app.post('/logout', (req, res)=>{
-
+  const {id} = req.body;
+  res.json({logout: true});
 });
 
 // get all users

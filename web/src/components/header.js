@@ -2,6 +2,15 @@ import React from 'react';
 import {Link} from 'react-router';
 
 class Header extends React.Component{
+
+  constructor(){
+    super();
+  }
+
+  logout(id){
+    this.props.logout(id);
+  }
+
 	render(){
     const {id} = this.props.user;
 		return(
@@ -12,9 +21,14 @@ class Header extends React.Component{
           <h2><Link to="/">Home</Link></h2>
           </div>
           {id &&
-  					<div className="col-md-6">
-            <Link to={`/users/${id}`}>My Account</Link>
-  					</div>
+            <div>
+              <div className="col-md-2">
+              <Link to={`/users/${id}`}>My Account</Link>
+              </div>
+    					<div className="col-md-2">
+              <span className="" onClick={() => this.logout(id)}>Logout</span>
+    					</div>
+            </div>
           }
 				</div>
 			</div>

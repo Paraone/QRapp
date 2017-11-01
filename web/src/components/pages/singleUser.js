@@ -9,10 +9,8 @@ class SingleUser extends Component{
   }
 
   componentWillMount(){
-    console.log('cookie', document.cookie);
-    let token = document.cookie.split(';').filter((c)=> c.startsWith('token'))[0].split('=')[1];
-    console.log('token', token);
-
+    let token;
+    if(document.cookie) token = document.cookie.split(';').filter((c)=> c.startsWith('token'))[0].split('=')[1];
     this.props.validate({token});
   }
 

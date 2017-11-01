@@ -50,8 +50,8 @@ class Home extends Component{
     })
   };
 
-  validate(mytoken){
-    this.props.validate(mytoken);
+  validate(token){
+    this.props.validate(token);
   };
 
   render(){
