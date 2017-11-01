@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import AlertContainer from 'react-alert';
 
 import Login from '../forms/login';
@@ -20,6 +21,12 @@ class Home extends Component{
       time: 2000,
       transition: 'scale'
     };
+  }
+
+  componentWillMount(){
+    let token;
+    if(document.cookie) token = document.cookie.split(';').filter( c => c.startsWith('token'))[0].split('=')[1];
+    this.props.validate({token});
   }
 
   setForm(form){
@@ -44,29 +51,34 @@ class Home extends Component{
   };
 
   validate(mytoken){
-    console.log('validate->token:', mytoken);
     this.props.validate(mytoken);
   };
 
   render(){
     const {form} = this.props.home;
-    const {token} = this.props.user;
-    console.log('render->token:', token)
+    const {token, id, username} = this.props.user;
 
     return(
       <div className="container home">
         <AlertContainer ref={(s)=> this.alert = s} {...this.alertOptions}></AlertContainer>
-        {form === 'login' &&
+        {!id ?
           <div>
-            <Login {...this.props} />
-            Not a member? <span className="btn" onClick={() => {this.setForm('register')}}>Create Account</span>
-          </div>
+          {form === 'login' &&
+            <div>
+              <Login {...this.props} />
+              Not a member? <span className="btn" onClick={() => {this.setForm('register')}}>Create Account</span>
+            </div>
 
-        }
-        {form === 'register' &&
+          }
+          {form === 'register' &&
+            <div>
+              <Register {...this.props} />
+              Already a member? <span className="btn" onClick={() => {this.setForm('login')}}>Log In</span>
+            </div>
+          }
+          </div> :
           <div>
-            <Register {...this.props} />
-            Already a member? <span className="btn" onClick={() => {this.setForm('login')}}>Log In</span>
+            <div>Welcome <Link to={`/users/${id}`}>{username}</Link>!</div>
           </div>
         }
         <div className='btn' onClick={()=> {this.validate({token})}} >Validate</div>

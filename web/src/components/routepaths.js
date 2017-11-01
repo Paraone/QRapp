@@ -6,6 +6,8 @@ import store, {history} from '../store';
 //components
 import Connector from './connector';
 import home from './pages/home';
+import AllUsers from './pages/allUsers';
+import SingleUser from './pages/singleUser';
 
 class RoutePaths extends Component{
   render(){
@@ -14,6 +16,10 @@ class RoutePaths extends Component{
         <Router history={history}>
           <Route path="/" component={Connector}>
             <IndexRoute component={home}></IndexRoute>
+            <Route path="users">
+              <IndexRoute component={AllUsers}></IndexRoute>
+              <Route path=":id" component={SingleUser}></Route>
+            </Route>
             {/*
               <Route path="/users" component={AllUsers}></Route>
             */}

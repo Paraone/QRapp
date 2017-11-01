@@ -73,45 +73,58 @@ app.post('/users', (req, res)=>{
       res.json(err);
     }).then((user)=>{
       console.log(user);
-      //create user session here
-      res.json(user);
+      const {id, email, username} = user;
+      jwt.sign({id, username, email}, 'secret', {expiresIn: (30)}, (err, token)=>{
+        if(err) console.log('err', err);
+        res.json({token, id, username, email});
+      });
     });
   });
 });
 
 app.post('/login', (req, res)=>{
-  console.log('req.body', req.body);
-  const {username, password} = req.body;
-  jwt.sign({username}, 'secret', {expiresIn: (60 * 2)}, (err, token)=>{
-    if(err) console.log('err', err);
-    res.json({token});
-  })
+  const {username: usernm, password} = req.body;
+
+  db.one('SELECT * FROM users WHERE username=$1', [usernm]).catch((err)=>{
+    if(err) {
+      console.log('err', err);
+      res.json({err: 'Username or password is incorrect.'});
+    }
+  }).then((user)=>{
+    const {id, username, email} = user;
+    bcrypt.compare(password, user.password_digest, (err, cmp)=>{
+      if(cmp){
+        jwt.sign({id, username, email}, 'secret', {expiresIn: (30)}, (err, token)=>{
+          if(err) console.log('err', err);
+          res.json({token, id, username, email});
+        });
+      }else{
+        res.json({err: 'Username or password is incorrect.'});
+      }
+    })
+  });
 });
 
 app.post('/validate', (req, res)=>{
-  console.log('req.body', req.body)
+  console.log('body', req.body)
   const {token} = req.body;
-  try{
-    jwt.verify(token, 'secret', (err, decoded)=>{
-      if(err) console.log('err', err);
-      res.json({decoded});
-    });
-  }catch(e){
-    console.log(e);
-  }
+  jwt.verify(token, 'secret', (err, decoded)=>{
+    if(err) res.json({err});
+    else if(decoded)res.json({decoded});
+  });
 });
 
-app.get('/logout', (req, res)=>{
+app.post('/logout', (req, res)=>{
 
 });
 
 // get all users
-app.get('/users', (req, res)=>{
+app.post('/users', (req, res)=>{
 
 });
 
 // get single user
-app.get('/users/:id', (req, res)=>{
+app.post('/users/:id', (req, res)=>{
 
 });
 

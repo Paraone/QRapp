@@ -6,6 +6,7 @@ function user(state = {}, action){
       return newstate;
 
     case 'CREATE_USER_SUCCESS':
+      newstate = action.user;
       return newstate;
 
     case 'CREATE_USER_FAIL':
@@ -15,7 +16,7 @@ function user(state = {}, action){
       return newstate;
 
     case 'LOGIN_SUCCESS':
-      newstate.token = action.token;
+      newstate = action.payload;
       return newstate;
 
     case 'LOGIN_FAIL':
@@ -25,9 +26,12 @@ function user(state = {}, action){
       return newstate;
 
     case 'VALIDATE_SUCCESS':
+      newstate = action.res;
+      newstate.token = document.cookie.split(';').filter((c) => c.startsWith('token'))[0].split('=')[1];
       return newstate;
 
     case 'VALIDATE_FAIL':
+      newstate = {};
       return newstate;
 
     default:
