@@ -5,7 +5,7 @@ const apiCall = axios.create({
   baseURL: 'http://localhost:3030'
 })
 
-var delete_cookie = (name)=>{
+const delete_cookie = (name)=>{
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
@@ -27,30 +27,36 @@ function attemptUpload(){
 }
 
 function uploadSuccess(res){
+  console.log('uploadSuccess', res)
   return {
     type: 'UPLOAD_SUCCESS'
   }
 }
 
 function uploadFail(err){
+  console.log('uploadFail', err);
   return {
     type: 'UPLOAD_FAIL'
   }
 }
 
-export function uploadFile(file){
+export function uploadFile(file, user){
 
   let data = new FormData();
-  data.append('img', file.files[0]);
+  data.append('username', user.username);
   data.append('name', file.name);
+  data.append('user_id', user.id);
+  data.append('uploadFile', file.files[0]);
 
   return (dispatch) => {
     dispatch(attemptUpload());
     return apiCall.post('/upload', data).then((res)=>{
-      dispatch(uploadSuccess(res));
+      console.log('res', res)
+      if(res.data.err) dispatch(uploadFail(res.data.err));
+      if(res.data.message) dispatch(uploadSuccess(res.data.message));
     }).catch((err)=>{
       dispatch(uploadFail(err));
-    })
+    });
   }
 }
 

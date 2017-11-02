@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 
+import Upload from '../forms/upload';
+
 class SingleUser extends Component{
 
   constructor(props){
@@ -26,7 +28,7 @@ class SingleUser extends Component{
         <div>
           <div>{`id: ${id}`}</div>
           <div>{`username: ${username}`}</div>
-          <div className='btn' onClick={()=> {this.validate({token})}} >Validate</div>
+          <Upload {...this.props} />
         </div> :
         <div>Loading user info...</div>
       }

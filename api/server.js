@@ -7,6 +7,7 @@ const fs = require('fs');
 const pgp = require('pg-promise')();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mkdir = require('mkdirp');
 const port = process.env.PORT || 3030;
 
 // set up bcrypt
@@ -16,7 +17,22 @@ const salt = bcrypt.genSalt(10);
 const app = express();
 
 // set up multer
-const upload = multer({dest: './uploads/'});
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    const {username} = req.body;
+    const {originalname} = file;
+    let path = `./files/${username}`;
+
+    mkdir(path, (err)=>{
+      if(err) console.log('mkdir err:', err);
+      else cb(null, path);
+    });
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+const upload = multer({storage});
 
 // set up pgp
 const db = pgp(process.env.DATABASE || 'postgres://paraone@localhost:5432/qr');
@@ -44,19 +60,14 @@ app.use('*', cors());
 
 // Connection test
 app.get('/', (req, res)=>{
-  res.json({message: 'Connected'});
+  return res.json({message: 'Connected'});
 });
 
-// basic upload
-app.post('/upload', upload.single('picfile'), (req, res)=>{
+// upload
+app.post('/upload', upload.single('uploadFile'), (req, res)=>{
+  if(!req.file) return res.json({err: 'No file uploaded'});
 
-  if(!req.files) return res.json({message: 'No file uploaded'});
-  let uploadFile = req.files;
-
-  fs.appendFile(`./files/${uploadFile.img.name}`, uploadFile.img.data, (err, data)=>{
-    if(err) console.log(err);
-    res.json({message: 'Uploaded!'})
-  });
+  return res.json({message: 'image uploaded'});
 });
 
 // create user
@@ -70,13 +81,13 @@ app.post('/users', (req, res)=>{
       [username, email, hash]
     ).catch((err)=>{
       console.log(err);
-      res.json(err);
+      return res.json(err);
     }).then((user)=>{
       console.log(user);
       const {id, email, username} = user;
       jwt.sign({id, username, email}, 'secret', {expiresIn: (30)}, (err, token)=>{
         if(err) console.log('err', err);
-        res.json({token, id, username, email});
+        return res.json({token, id, username, email});
       });
     });
   });
@@ -88,7 +99,7 @@ app.post('/login', (req, res)=>{
   db.one('SELECT * FROM users WHERE username=$1 OR email=$1', [usernm]).catch((err)=>{
     if(err) {
       console.log('err', err);
-      res.json({err: 'Username or password is incorrect.'});
+      return res.json({err: 'Username or password is incorrect.'});
     }
   }).then((user)=>{
     const {id, username, email} = user;
@@ -96,10 +107,10 @@ app.post('/login', (req, res)=>{
       if(cmp){
         jwt.sign({id, username, email}, 'secret', {expiresIn: (30)}, (err, token)=>{
           if(err) console.log('err', err);
-          res.json({token, id, username, email});
+          return res.json({token, id, username, email});
         });
       }else{
-        res.json({err: 'Username or password is incorrect.'});
+        return res.json({err: 'Username or password is incorrect.'});
       }
     })
   });
@@ -108,14 +119,14 @@ app.post('/login', (req, res)=>{
 app.post('/validate', (req, res)=>{
   const {token} = req.body;
   jwt.verify(token, 'secret', (err, decoded)=>{
-    if(err) res.json({err});
-    else if(decoded)res.json({decoded});
+    if(err) return res.json({err});
+    else if(decoded)return res.json({decoded});
   });
 });
 
 app.post('/logout', (req, res)=>{
   const {id} = req.body;
-  res.json({logout: true});
+  return res.json({id});
 });
 
 // get all users

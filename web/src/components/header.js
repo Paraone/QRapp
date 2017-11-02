@@ -21,14 +21,14 @@ class Header extends React.Component{
           <h2><Link to="/">Home</Link></h2>
           </div>
           {id &&
-            <div>
-              <div className="col-md-2">
+            <ul className="list-inline col-md-6">
+              <li className="">
               <Link to={`/users/${id}`}>My Account</Link>
-              </div>
-    					<div className="col-md-2">
-              <span className="" onClick={() => this.logout(id)}>Logout</span>
-    					</div>
-            </div>
+              </li>
+    					<li className="">
+              <span className="btn" style={{color: 'black'}} onClick={() => this.logout(id)}>Logout</span>
+    					</li>
+            </ul>
           }
 				</div>
 			</div>

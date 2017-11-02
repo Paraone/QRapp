@@ -1,4 +1,5 @@
 function home(state = {}, action){
+  console.log('home reducer::action', action);
   let newstate = Object.assign({}, state);
   switch(action.type){
     case 'UPLOAD_ATTEMPT':
