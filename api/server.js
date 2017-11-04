@@ -10,9 +10,6 @@ const jwt = require('jsonwebtoken');
 const mkdir = require('mkdirp');
 const port = process.env.PORT || 3030;
 
-// set up bcrypt
-const salt = bcrypt.genSalt(10);
-
 // Set up the express app
 const app = express();
 
@@ -66,8 +63,14 @@ app.get('/', (req, res)=>{
 // upload
 app.post('/upload', upload.single('uploadFile'), (req, res)=>{
   if(!req.file) return res.json({err: 'No file uploaded'});
-
-  return res.json({message: 'image uploaded'});
+  const {user_id, username} = req.body;
+  const {originalname} = req.file;
+  db.any('INSERT INTO files (id, user_id, address) VALUES (DEFAULT, $1, $2)', [user_id, `./files/${username}/${originalname}`]).catch((err) =>{
+    if(err) return res.json({err: 'Could not store reference to file in db'});
+  }).then((data)=>{
+    console.log('data', data);
+    return res.json({message: 'image uploaded and stored'});
+  })
 });
 
 // create user
@@ -96,21 +99,23 @@ app.post('/users', (req, res)=>{
 app.post('/login', (req, res)=>{
   const {username: usernm, password} = req.body;
 
-  db.one('SELECT * FROM users WHERE username=$1 OR email=$1', [usernm]).catch((err)=>{
+  db.any('SELECT * FROM users WHERE username=$1 OR email=$1', [usernm]).catch((err)=>{
     if(err) {
       console.log('err', err);
-      return res.json({err: 'Username or password is incorrect.'});
+      return res.json({err, message: 'Username or password is incorrect.'});
     }
   }).then((user)=>{
-    const {id, username, email} = user;
-    bcrypt.compare(password, user.password_digest, (err, cmp)=>{
+    console.log('user', user);
+    if(!user[0]) return res.json({err: 'User does not exist', message: 'Username or password is incorrect.'});
+    const {id, username, email, password_digest} = user[0];
+    bcrypt.compare(password, password_digest, (err, cmp)=>{
       if(cmp){
         jwt.sign({id, username, email}, 'secret', {expiresIn: (30)}, (err, token)=>{
           if(err) console.log('err', err);
           return res.json({token, id, username, email});
         });
       }else{
-        return res.json({err: 'Username or password is incorrect.'});
+        return res.json({err: err || 'error', message: 'Username or password is incorrect.'});
       }
     })
   });

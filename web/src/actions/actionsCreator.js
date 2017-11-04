@@ -27,7 +27,10 @@ function attemptUpload(){
 }
 
 function uploadSuccess(res){
-  console.log('uploadSuccess', res)
+  console.log('uploadSuccess', res);
+  setTimeout(()=>{
+    browserHistory.push('/');
+  });
   return {
     type: 'UPLOAD_SUCCESS'
   }
@@ -112,7 +115,6 @@ function loginSuccess(payload){
   // browserHistory.push placed at bottom of stack, after state changes
   setTimeout(()=>{
     browserHistory.push(`/users/${payload.id}`);
-
   });
   const now = new Date();
   var utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() ,
@@ -136,6 +138,7 @@ export function login(user){
   return (dispatch) =>{
     dispatch(attemptLogin());
     return apiCall.post('/login', user).then((res)=>{
+      console.log('login res', res);
       if(res.data.err)
         dispatch(loginFail(res.data.err));
       else dispatch(loginSuccess(res.data));
