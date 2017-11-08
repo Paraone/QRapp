@@ -106,7 +106,7 @@ app.post('/login', (req, res)=>{
     }
   }).then((user)=>{
     console.log('user', user);
-    if(!user[0]) return res.json({err: 'User does not exist', message: 'Username or password is incorrect.'});
+    if(!user[0]) return res.json({err: 'Username or password is incorrect!'});
     const {id, username, email, password_digest} = user[0];
     bcrypt.compare(password, password_digest, (err, cmp)=>{
       if(cmp){
@@ -115,7 +115,7 @@ app.post('/login', (req, res)=>{
           return res.json({token, id, username, email});
         });
       }else{
-        return res.json({err: err || 'error', message: 'Username or password is incorrect.'});
+        return res.json({err: err || 'Username or password is incorrect!'});
       }
     })
   });

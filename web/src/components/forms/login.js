@@ -6,7 +6,7 @@ class Login extends Component{
     e.preventDefault();
     const {username: {value: username},
             password: {value: password}} = this;
-    this.props.login({username, password});
+    this.props.login({username, password}, this.props.showAlert);
   }
 
   render(){

@@ -3,12 +3,8 @@ import {Link} from 'react-router';
 
 class Header extends React.Component{
 
-  constructor(){
-    super();
-  }
-
   logout(id){
-    this.props.logout(id);
+    this.props.logout(id, this.props.showAlert);
   }
 
 	render(){

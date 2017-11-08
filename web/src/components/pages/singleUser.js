@@ -13,7 +13,7 @@ class SingleUser extends Component{
   componentWillMount(){
     let token;
     if(document.cookie) token = document.cookie.split(';').filter((c)=> c.startsWith('token'))[0].split('=')[1];
-    this.props.validate({token});
+    this.props.validate({token}, this.props.showAlert);
   }
 
   validate(mytoken){

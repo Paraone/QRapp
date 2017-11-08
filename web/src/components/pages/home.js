@@ -13,21 +13,13 @@ class Home extends Component{
     this.submit = this.submit.bind(this);
     this.validate = this.validate.bind(this);
     this.setForm = this.setForm.bind(this);
-
-    this.alertOptions = {
-      offset: 14,
-      position: 'top center',
-      theme: 'dark',
-      time: 2000,
-      transition: 'scale'
-    };
   }
 
   componentWillMount(){
     let token;
     if(document.cookie) {
       token = document.cookie.split(';').filter( c => c.startsWith('token'))[0].split('=')[1];
-      this.props.validate({token});
+      this.props.validate({token}, this.props.showAlert);
     }
   }
 
@@ -44,16 +36,8 @@ class Home extends Component{
 
   }
 
-  showAlert = ()=>{
-    this.alert.success('alert success!', {
-      onClose: () =>{this.alert.info('alert info!',{
-        onClose: () =>{this.alert.error('alert error!')}
-      })}
-    })
-  };
-
   validate(token){
-    this.props.validate(token);
+    this.props.validate(token, this.props.showAlert);
   };
 
   render(){
@@ -62,7 +46,6 @@ class Home extends Component{
 
     return(
       <div className="container home">
-        <AlertContainer ref={(s)=> this.alert = s} {...this.alertOptions}></AlertContainer>
         {!id ?
           <div>
           {form === 'login' &&
@@ -83,7 +66,6 @@ class Home extends Component{
             <div>Welcome <Link to={`/users/${id}`}>{username}</Link>!</div>
           </div>
         }
-        <div className='btn' onClick={()=> {this.validate({token})}} >Validate</div>
       </div>
     );
   }

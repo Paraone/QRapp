@@ -71,7 +71,8 @@ function attemptCreateUser(){
   };
 }
 
-function createUserSuccess(user){
+function createUserSuccess(user, showAlert){
+  showAlert('User created!')
   setTimeout(()=>{
     browserHistory.push(`/users/${user.id}`);
   });
@@ -86,7 +87,8 @@ function createUserSuccess(user){
   };
 }
 
-function createUserFail(err){
+function createUserFail(err, showAlert){
+  showAlert('User could not be created!')
   console.log('err', err);
   return {
     type: 'CREATE_USER_FAIL',
@@ -94,14 +96,14 @@ function createUserFail(err){
   };
 }
 
-export function createUser(user){
+export function createUser(user, showAlert){
   return (dispatch) =>{
     dispatch(attemptCreateUser());
     return apiCall.post('/users', user).then((res)=>{
-      dispatch(createUserSuccess(res.data));
+      dispatch(createUserSuccess(res.data, showAlert));
       dispatch(setForm('login'));
     }).catch((err)=>{
-      dispatch(createUserFail(err));
+      dispatch(createUserFail(err, showAlert));
     });
   };
 }
@@ -111,7 +113,8 @@ function attemptLogin(){
   return{type: 'LOGIN_ATTEMPT'};
 }
 
-function loginSuccess(payload){
+function loginSuccess(payload, showAlert){
+  showAlert('You have logged in successfully!', null, 'success');
   // browserHistory.push placed at bottom of stack, after state changes
   setTimeout(()=>{
     browserHistory.push(`/users/${payload.id}`);
@@ -127,23 +130,24 @@ function loginSuccess(payload){
   };
 }
 
-function loginFail(err) {
+function loginFail(err, showAlert) {
+  showAlert(err, null, 'error');
   return {
     type: 'LOGIN_FAIL',
     err
   };
 }
 
-export function login(user){
+export function login(user, showAlert){
   return (dispatch) =>{
     dispatch(attemptLogin());
     return apiCall.post('/login', user).then((res)=>{
       console.log('login res', res);
       if(res.data.err)
-        dispatch(loginFail(res.data.err));
-      else dispatch(loginSuccess(res.data));
+        dispatch(loginFail(res.data.err, showAlert));
+      else dispatch(loginSuccess(res.data, showAlert));
     }).catch((err)=>{
-      dispatch(loginFail(err));
+      dispatch(loginFail(err, showAlert));
     })
   }
 }
@@ -153,7 +157,10 @@ function attemptLogout(){
   return{type: 'LOGOUT_ATTEMPT'};
 }
 
-function logoutSuccess(payload){
+function logoutSuccess(payload, showAlert){
+  showAlert('You have successfully logged out!', ()=>{
+    console.log('Logout finished');
+  })
   delete_cookie('token');
   setTimeout(()=>{
     browserHistory.push('/');
@@ -164,22 +171,23 @@ function logoutSuccess(payload){
   };
 }
 
-function logoutFail(err) {
+function logoutFail(err, showAlert) {
+  showAlert('You could not be logged out!');
   return {
     type: 'LOGOUT_FAIL',
     err
   };
 }
 
-export function logout(id){
+export function logout(id, showAlert){
   return (dispatch) =>{
     dispatch(attemptLogout());
     return apiCall.post('/logout', {id}).then((res)=>{
       if(res.data.err)
-        dispatch(logoutFail(res.data.err));
-      else dispatch(logoutSuccess(res.data));
+        dispatch(logoutFail(res.data.err, showAlert));
+      else dispatch(logoutSuccess(res.data, showAlert));
     }).catch((err)=>{
-      dispatch(logoutFail(err));
+      dispatch(logoutFail(err, showAlert));
     })
   }
 }
@@ -196,7 +204,8 @@ function validateSuccess(res){
   };
 }
 
-function validateFail(err){
+function validateFail(err, showAlert){
+  showAlert("You're user session could not be verified!", null,'error')
   delete_cookie('token');
   // browserHistory.push placed at bottom of stack, after state changes
   setTimeout(() =>{
@@ -208,14 +217,14 @@ function validateFail(err){
   };
 }
 
-export function validate(payload){
+export function validate(payload, showAlert){
   return (dispatch) =>{
     dispatch(attemptValidate());
     return apiCall.post('/validate', payload).then((res) =>{
-      if(res.data.err) dispatch(validateFail(res.data.err));
-      if(res.data.decoded) dispatch(validateSuccess(res.data.decoded));
+      if(res.data.err) dispatch(validateFail(res.data.err, showAlert));
+      if(res.data.decoded) dispatch(validateSuccess(res.data.decoded, showAlert));
     }).catch((err)=>{
-      dispatch(validateFail(err));
+      dispatch(validateFail(err, showAlert));
     });
   };
 }
