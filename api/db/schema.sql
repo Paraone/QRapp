@@ -14,6 +14,7 @@ CREATE TABLE users (
 CREATE TABLE files (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL,
-  address VARCHAR(255),
+  filename VARCHAR(255),
+  mimetype VARCHAR(255),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );

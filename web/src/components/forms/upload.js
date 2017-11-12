@@ -10,17 +10,18 @@ class Upload extends Component{
 
   submit(e){
     e.preventDefault();
-    const {file} = this;
+    const {file, form} = this;
     const {id, username} = this.props.user;
 
-    this.props.uploadFile(file, {id, username});
+    this.props.uploadFile(file, {id, username}, this.props.showAlert);
+    form.reset();
   }
 
   render(){
     return(
-      <form ref={(input) => this.form = input} onSubmit={(e) => this.submit(e)} className="form">
-        <input ref={(input) => this.file = input} type="file" name="uploadFile" />
-        <input type="submit"/>
+      <form className="form row" ref={(input) => this.form = input} onSubmit={(e) => this.submit(e)}>
+        <input className="col-md-2" type="submit" value="Upload File"/>
+        <input className="col-md-3" ref={(input) => this.file = input} type="file" name="uploadFile" />
       </form>
     );
   }

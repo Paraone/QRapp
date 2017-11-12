@@ -1,8 +1,32 @@
 function user(state = {}, action){
   let newstate = Object.assign({}, state);
-  console.log('reducers::user action:', action);
+  console.log('user reducer::action', action);
   switch(action.type){
 
+    // UPLOADS /////////////////////////////////////////////
+    case 'UPLOAD_ATTEMPT':
+      return newstate;
+
+    case 'UPLOAD_SUCCESS':
+      newstate.files = [...newstate.files,
+                        ...action.res || 'yes'];
+      return newstate;
+
+    case 'UPLOAD_FAIL':
+      return newstate;
+
+    // DOWNLOADS///////////////////////////////////////
+    case 'DOWNLOAD_ATTEMPT':
+      return newstate;
+
+    case 'DOWNLOAD_SUCCESS':
+      newstate.download = action.result;
+      return newstate;
+
+    case 'DOWNLOAD_FAIL':
+      return newstate;
+
+    // CREATE USER //////////////////////////////////////
     case 'CREATE_USER_ATTEMPT':
       return newstate;
 
@@ -13,6 +37,7 @@ function user(state = {}, action){
     case 'CREATE_USER_FAIL':
       return newstate;
 
+    // LOGIN /////////////////////////////
     case 'LOGIN_ATTEMPT':
       return newstate;
 
@@ -23,6 +48,7 @@ function user(state = {}, action){
     case 'LOGIN_FAIL':
       return newstate;
 
+    // LOGOUT //////////////////////////////
     case 'LOGOUT_ATTEMPT':
       return newstate;
 
@@ -33,11 +59,13 @@ function user(state = {}, action){
     case 'LOGOUT_FAIL':
       return newstate;
 
+    // VALIDATE ////////////////////////////////
     case 'VALIDATE_ATTEMPT':
       return newstate;
 
     case 'VALIDATE_SUCCESS':
       newstate = action.res;
+      newstate.files = action.files;
       newstate.token = document.cookie.split(';').filter((c) => c.startsWith('token'))[0].split('=')[1];
       return newstate;
 

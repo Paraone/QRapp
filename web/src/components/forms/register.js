@@ -12,7 +12,7 @@ class Register extends Component{
     e.preventDefault();
     const { username: {value: username}, email: {value: email},
             password: {value: password}, confirm: {value: confirm}} = this;
-    this.props.createUser({username, email, password});
+    this.props.createUser({username, email, password}, this.props.showAlert);
   }
 
   render(){

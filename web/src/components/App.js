@@ -22,7 +22,7 @@ class App extends Component {
     };
   }
 
-  showAlert(msg, cb, type = 'show'){
+  showAlert(msg, type = 'show', cb){
     this.alert[type](msg, {
       onClose: ()=>{if(cb) return cb()}
     })

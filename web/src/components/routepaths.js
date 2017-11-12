@@ -8,6 +8,8 @@ import Connector from './connector';
 import home from './pages/home';
 import AllUsers from './pages/allUsers';
 import SingleUser from './pages/singleUser';
+import AllFiles from './pages/allFiles';
+import SingleFile from './pages/singleFile';
 
 class RoutePaths extends Component{
   render(){
@@ -18,11 +20,14 @@ class RoutePaths extends Component{
             <IndexRoute component={home}></IndexRoute>
             <Route path="users">
               <IndexRoute component={AllUsers}></IndexRoute>
-              <Route path=":id" component={SingleUser}></Route>
+              <Route path=":id">
+                <IndexRoute component={SingleUser}></IndexRoute>
+                <Route path="files">
+                  <IndexRoute component={AllFiles}></IndexRoute>
+                  <Route path=":filename" component={SingleFile}></Route>
+                </Route>
+              </Route>
             </Route>
-            {/*
-              <Route path="/users" component={AllUsers}></Route>
-            */}
           </Route>
         </Router>
       </Provider>
