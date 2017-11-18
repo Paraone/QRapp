@@ -30,9 +30,6 @@ function attemptUpload(){
 function uploadSuccess(res, showAlert){
   console.log('res', res)
   showAlert(res.message, 'success');
-  // setTimeout(()=>{
-  //   browserHistory.push('/');
-  // });
   return {
     type: 'UPLOAD_SUCCESS',
     res: res.data
@@ -52,6 +49,8 @@ export function uploadFile(file, user, showAlert){
   data.append('username', user.username);
   data.append('name', file.name);
   data.append('user_id', user.id);
+  data.append('box_id', user.box_id);
+  data.append('boxToken', user.boxToken);
   data.append('uploadFile', file.files[0]);
 
   return (dispatch) => {
@@ -191,6 +190,7 @@ export function login(user, showAlert){
         dispatch(loginFail(res.data.err, showAlert));
       else dispatch(loginSuccess(res.data, showAlert));
     }).catch((err)=>{
+      console.log('err', err);
       dispatch(loginFail(err, showAlert));
     })
   }

@@ -8,10 +8,7 @@ const defaultState = {
   home: {
     form: 'login'
   },
-  user: {
-    files: [],
-    downloads: []
-  }
+  user: {}
 };
 
 const store = createStore(rootReducer, defaultState, applyMiddleware(thunk));

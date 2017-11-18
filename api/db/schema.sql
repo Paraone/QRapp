@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
+  box_id VARCHAR(255),
 	last_name VARCHAR(255),
   first_name VARCHAR(255),
 	username VARCHAR(255),

@@ -11,10 +11,8 @@ class Upload extends Component{
   submit(e){
     e.preventDefault();
     const {file, form} = this;
-    const {id, username} = this.props.user;
 
-    this.props.uploadFile(file, {id, username}, this.props.showAlert);
-    form.reset();
+    this.props.uploadFile(file, this.props.user, this.props.showAlert);
   }
 
   render(){

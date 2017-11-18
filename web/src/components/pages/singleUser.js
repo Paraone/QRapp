@@ -39,7 +39,7 @@ class SingleUser extends Component{
             }
           </ul>
           {download &&
-            <img src={download} alt="Downloaded File"/>
+            <img src={download} alt="Download File" />
           }
         </div> :
         <div>Loading user info...</div>

@@ -9,7 +9,7 @@ function user(state = {}, action){
 
     case 'UPLOAD_SUCCESS':
       newstate.files = [...newstate.files,
-                        ...action.res || 'yes'];
+                        ...action.res];
       return newstate;
 
     case 'UPLOAD_FAIL':

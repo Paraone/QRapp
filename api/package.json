@@ -10,8 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.17.1",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.16.1",
+    "box-node-sdk": "^1.9.0",
     "cors": "^2.8.4",
     "express": "^4.14.1",
     "express-fileupload": "^0.3.0",
